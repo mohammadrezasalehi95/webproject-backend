@@ -8,6 +8,11 @@ class Team(models.Model):
     bio=models.TextField(max_length=500)
 
 
+class New(models.Model):
+    title=models.TextField(max_length=500)
+    subtitle=models.TextField(max_length=500)
+    image=models.ImageField(upload_to='assets/teams')
+
 class Person(models.Model):
 
     pid=models.IntegerField()
@@ -24,14 +29,10 @@ class Person(models.Model):
     rule=models.CharField(max_length=20)
     previousClub=models.CharField(max_length=20)
     squad=models.CharField(max_length=20)
+    favarites=models.ManyToManyField(New)
 
 
 
-
-class New(models.Model):
-    title=models.TextField(max_length=500)
-    subtitle=models.TextField(max_length=500)
-    image=models.ImageField(upload_to='assets/teams')
 
 
 
