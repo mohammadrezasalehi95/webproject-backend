@@ -23,7 +23,7 @@ class Profile(models.Model):
     age=models.IntegerField()
     height=models.IntegerField()
     weight=models.IntegerField()
-    currentTeam=models.ForeignKey(Team,on_delete=models.CASCADE,to_field=name)
+    currentTeam=models.ForeignKey(Team,on_delete=models.CASCADE,null=True)
     national=models.CharField(max_length=20)
     rule=models.CharField(max_length=20)
     previousClub=models.CharField(max_length=20)
@@ -36,8 +36,8 @@ class Profile(models.Model):
 
 
 class Game(models.Model):
-    team1=models.ForeignKey(Team,on_delete=models.CASCADE)
-    team2=models.ForeignKey(Team,on_delete=models.CASCADE)
+    team1=models.ForeignKey(Team,related_name='home',on_delete=models.CASCADE)
+    team2=models.ForeignKey(Team,related_name='guest',on_delete=models.CASCADE)
     date=models.DateField()
     status=models.IntegerField()
     team1_score=models.IntegerField()
