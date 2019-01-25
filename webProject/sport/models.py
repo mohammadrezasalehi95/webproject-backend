@@ -7,13 +7,12 @@ class Team(models.Model):
     name=models.CharField(max_length=20,primary_key=True)
     bio=models.TextField(max_length=500)
 
-
 class New(models.Model):
     title=models.TextField(max_length=500)
     subtitle=models.TextField(max_length=500)
     image=models.ImageField(upload_to='assets/teams')
 
-class Person(models.Model):
+class Profile(models.Model):
 
     pid=models.IntegerField()
     name=models.CharField(max_length=20)
