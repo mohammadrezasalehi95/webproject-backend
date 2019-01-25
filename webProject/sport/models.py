@@ -48,7 +48,8 @@ class Game(models.Model):
     team2_shots=models.IntegerField()
     team1_corner=models.IntegerField()
     team2_corner=models.IntegerField()
-
+    team1_point=models.IntegerField()
+    team2_point=models.IntegerField()
 
 class Game_Player(models.Model):
     game=models.ForeignKey(Game,on_delete=models.CASCADE)

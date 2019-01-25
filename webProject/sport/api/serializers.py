@@ -5,6 +5,8 @@ from ..models import *
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
+from sport.models import Game
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -65,11 +67,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TokenSerializer(serializers.ModelSerializer):
+class GameResultSerializer(serializers.ModelSerializer):
     auth_token = serializers.CharField(source='key')
 
     class Meta:
         model = Token
         fields = ("auth_token", "created")
 class GameResultSerializer(serializers.Serializer):
-    pass
+    def get_fields(self):
+        return {"first":4}

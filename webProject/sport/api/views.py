@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User, Group
+from django.db.models import Q
 from rest_framework import viewsets
 from ..models import *
+
+
 from .serializers import UserSerializer, GroupSerializer, ProfileSerializer
 
 
@@ -22,3 +25,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
+
+
+class GameResults(viewsets.ModelViewSet):
+    def get_queryset(self):
+        teamName=self.kwargs['teamName']
+        return Game.objects.filter(Q(team1=teamName) | Q(team2=teamName))[:10]
+
