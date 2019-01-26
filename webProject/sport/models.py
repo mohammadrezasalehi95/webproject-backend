@@ -6,11 +6,12 @@ from django.db import models
 class Team(models.Model):
     name=models.CharField(max_length=20,primary_key=True)
     bio=models.TextField(max_length=500)
+    image=models.ImageField(upload_to='assets/sport/team')
 
 class New(models.Model):
     title=models.TextField(max_length=500)
     subtitle=models.TextField(max_length=500)
-    image=models.ImageField(upload_to='assets/teams')
+    image=models.ImageField(upload_to='assets/sport/news')
 
 class Profile(models.Model):
 
@@ -18,17 +19,17 @@ class Profile(models.Model):
     name=models.CharField(max_length=20)
     bio=models.TextField(max_length=500)
     gender=models.CharField(max_length=5)
-    image=models.ImageField(upload_to='assets/players')
-    birthDay=models.DateField()
+    image=models.ImageField(upload_to='assets/sport/players',null=True)
+    born=models.DateField()
     age=models.IntegerField()
     height=models.IntegerField()
     weight=models.IntegerField()
     currentTeam=models.ForeignKey(Team,on_delete=models.CASCADE,null=True)
     national=models.CharField(max_length=20)
     rule=models.CharField(max_length=20)
-    previousClub=models.CharField(max_length=20)
-    squad=models.CharField(max_length=20)
-    favarites=models.ManyToManyField(New)
+    previousClub=models.CharField(max_length=20,null=True)
+    squad=models.CharField(max_length=20,null=True)
+    favarites=models.ManyToManyField(New,null=True)
 
 
 
@@ -48,8 +49,8 @@ class Game(models.Model):
     team2_shots=models.IntegerField()
     team1_corner=models.IntegerField()
     team2_corner=models.IntegerField()
-    team1_point=models.IntegerField()
-    team2_point=models.IntegerField()
+    team1_point=models.IntegerField(default=0)
+    team2_point=models.IntegerField(default=0)
 
 class Game_Player(models.Model):
     game=models.ForeignKey(Game,on_delete=models.CASCADE)
@@ -59,7 +60,7 @@ class Game_Player(models.Model):
     changingTime=models.CharField(max_length=20)
 
 class Game_Report(models.Model):
-    game=models.ForeignKey(Game,on_delete=models.CASCADE,primary_key=True)
+    game=models.OneToOneField(Game,on_delete=models.CASCADE)
     last_report=models.TextField(max_length=500)
 
 class Game_Event(models.Model):

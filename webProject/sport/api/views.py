@@ -1,35 +1,30 @@
-from django.contrib.auth.models import User, Group
 from django.db.models import Q
-from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from ..models import *
+from .serializers import *
+
+#
+# class GameResults(RetrieveUpdateDestroyAPIView):
+#     serializer_class = GameResultSerializer
+#     def get_queryset(self):
+#         teamName=self.kwargs['teamName']
+#         return Game.objects.filter(Q(team1__name=teamName) | Q(team2__name=teamName))[:10]
+#
+
+@api_view(['GET', 'POST'])
+def game_results(request, teamName):
+    if request.method == 'GET':
+        query = Game.objects.filter(Q(team1__name=teamName) | Q(team2__name=teamName))[:10]
+        serializer = GameResultSerializer(query, many=True)
+        return Response(serializer.data)
 
 
-from .serializers import UserSerializer, GroupSerializer, ProfileSerializer
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-
-
-class GameResults(viewsets.ModelViewSet):
-    def get_queryset(self):
-        teamName=self.kwargs['teamName']
-        return Game.objects.filter(Q(team1=teamName) | Q(team2=teamName))[:10]
-
+@api_view(['GET', 'POST'])
+def team_members(request, teamName):
+    if request.method == 'GET':
+        query = Team.objects.get(name=teamName)
+        members=query.profile_set
+        serializer = MemberTeamSerializer(members, many=True)
+        return Response(serializer.data)

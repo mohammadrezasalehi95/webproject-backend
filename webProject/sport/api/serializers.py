@@ -68,11 +68,13 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class GameResultSerializer(serializers.ModelSerializer):
-    auth_token = serializers.CharField(source='key')
 
     class Meta:
-        model = Token
-        fields = ("auth_token", "created")
-class GameResultSerializer(serializers.Serializer):
-    def get_fields(self):
-        return {"first":4}
+        model = Game
+        fields = ('team1','team2','date','status','team1_score','team2_score','team1_point','team2_point')
+
+class MemberTeamSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('name','born','rule','squad','previousClub','image')
