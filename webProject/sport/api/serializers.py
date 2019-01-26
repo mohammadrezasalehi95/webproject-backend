@@ -81,3 +81,13 @@ class LeagueSerializer(serializers.ModelSerializer):
     class Meta:
         model=League
         fields= '__all__'
+class FootBallSpringDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FootBallSpringDetail
+        exclude = ('profile', )
+class BasketSpringDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BasketSpringDetail
+        exclude = ('profile', )

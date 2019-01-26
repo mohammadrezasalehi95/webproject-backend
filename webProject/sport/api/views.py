@@ -30,3 +30,16 @@ class LeaguesListView(generics.ListAPIView):
 class LeagueDetailView(generics.GenericAPIView):
 
     pass
+
+@api_view(['GET', 'POST'])
+def player_spring_detail(request, pid):
+    if request.method == 'GET':
+        player = Profile.objects.get(pid=pid)
+        if player.type=="footballist":
+            details = player.footballspringdetail_set
+            serializer = FootBallSpringDetailSerializer(details, many=True)
+
+        elif player.type=="basketbalist":
+            details = player.basketspringdetail_set
+            serializer = BasketSpringDetailSerializer(details, many=True)
+        return Response(serializer.data)

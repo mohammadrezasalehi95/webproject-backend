@@ -23,22 +23,21 @@ class New(models.Model):
 
 
 class Profile(models.Model):
-    pid = models.IntegerField()
-    name = models.CharField(max_length=20)
-    bio = models.TextField(max_length=500)
-    gender = models.CharField(max_length=5)
-    image = models.ImageField(upload_to='assets/sport/players', null=True)
-    born = models.DateField()
-    age = models.IntegerField()
-    height = models.IntegerField()
-    weight = models.IntegerField()
-    currentTeam = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
-    national = models.CharField(max_length=20)
-    rule = models.CharField(max_length=20)
-    previousClub = models.CharField(max_length=20, null=True)
-    squad = models.CharField(max_length=20, null=True)
-    favarites = models.ManyToManyField(New, null=True)
-
+    pid=models.IntegerField()
+    name=models.CharField(max_length=20)
+    bio=models.TextField(max_length=500)
+    gender=models.CharField(max_length=5)
+    image=models.ImageField(upload_to='assets/sport/players',null=True)
+    born=models.DateField()
+    age=models.IntegerField()
+    height=models.IntegerField()
+    weight=models.IntegerField()
+    currentTeam=models.ForeignKey(Team,on_delete=models.CASCADE,null=True)
+    national=models.CharField(max_length=20)
+    rule=models.CharField(max_length=20)
+    previousClub=models.CharField(max_length=20,null=True)
+    squad=models.CharField(max_length=20,null=True)
+    type=models.CharField(max_length=20,null=True)
 
 class Game(models.Model):
     team1 = models.ForeignKey(Team, related_name='home', on_delete=models.CASCADE)
@@ -110,3 +109,20 @@ class LeagueRow(models.Model):
 
 class Cup(models.Model):
     type = models.IntegerField(choices=((4, 4), (8, 8), (16, 16), (32, 32), (64, 64), (128, 128)))
+
+
+class FootBallSpringDetail(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    spring =models.CharField(max_length=20)
+    goals=models.IntegerField(null=True)
+    goalPass=models.IntegerField(null=True)
+    cards =models.IntegerField(null=True)
+
+class BasketSpringDetail(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    spring = models.CharField(max_length=20)
+    twoscoreGoals=models.IntegerField(null=True)
+    threescoreGoals=models.IntegerField(null=True)
+    fault=models.IntegerField(null=True)
+    ribsndhs=models.IntegerField(null=True)
+    playTime= models.TimeField(null=True)
