@@ -1,11 +1,21 @@
-from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
 from ..models import *
-from rest_framework import serializers
-from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User, Group
 
-from sport.models import Game
+from rest_framework import serializers
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'groups')
+
+
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('url', 'name')
+
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -49,18 +59,6 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(self.error_messages['invalid_credentials'])
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'groups')
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('url', 'name')
-
-
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -78,3 +76,8 @@ class MemberTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('name','born','rule','squad','previousClub','image')
+
+class LeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=League
+        fields= '__all__'

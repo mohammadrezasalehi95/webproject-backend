@@ -6,6 +6,7 @@ pip install markdown       # Markdown support for the browsable API.
 pip install django-filter  # Filtering support
 pip install python-decouple
 pip install coverage
+pip install Pillow # library for django ImageField
 ```
 for seeing coverage of test run following commands:
 ```bash
