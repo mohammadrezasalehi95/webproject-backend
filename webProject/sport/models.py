@@ -6,12 +6,12 @@ from django.db import models
 class Team(models.Model):
     name=models.CharField(max_length=20,primary_key=True)
     bio=models.TextField(max_length=500)
-    image=models.ImageField(upload_to='assets/sport/team')
+    image=models.ImageField(upload_to='assets/sport/team',null=True)
 
 class New(models.Model):
     title=models.TextField(max_length=500)
     subtitle=models.TextField(max_length=500)
-    image=models.ImageField(upload_to='assets/sport/news')
+    image=models.ImageField(upload_to='assets/sport/news',null=True)
 
 class Profile(models.Model):
 
