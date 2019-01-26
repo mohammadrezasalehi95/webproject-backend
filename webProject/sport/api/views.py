@@ -1,5 +1,6 @@
 from django.db.models import Q
 from rest_framework.decorators import api_view
+from rest_framework import status, mixins, generics, permissions
 from rest_framework.response import Response
 
 from .serializers import *
@@ -20,3 +21,12 @@ def team_members(request, teamName):
         members = query.profile_set
         serializer = MemberTeamSerializer(members, many=True)
         return Response(serializer.data)
+
+
+class LeaguesListView(generics.ListAPIView):
+    queryset = League.objects.all()
+    serializer_class = LeagueSerializer
+
+class LeagueDetailView(generics.GenericAPIView):
+
+    pass

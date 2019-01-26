@@ -9,27 +9,17 @@ LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
-class Team(models.Model):
-    name=models.CharField(max_length=20,primary_key=True)
-    bio=models.TextField(max_length=500)
-    image=models.ImageField(upload_to='assets/sport/team',null=True)
-
-class New(models.Model):
-    title=models.TextField(max_length=500)
-    subtitle=models.TextField(max_length=500)
-    image=models.ImageField(upload_to='assets/sport/news',null=True)
-
 
 class Team(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
     bio = models.TextField(max_length=500)
-    image = models.ImageField(upload_to='assets/sport/team')
+    image = models.ImageField(upload_to='assets/sport/team', null=True, default='default_team.jpg')
 
 
 class New(models.Model):
     title = models.TextField(max_length=500)
     subtitle = models.TextField(max_length=500)
-    image = models.ImageField(upload_to='assets/sport/news')
+    image = models.ImageField(upload_to='assets/sport/news', null=True)
 
 
 class Profile(models.Model):
@@ -53,26 +43,26 @@ class Profile(models.Model):
 class Game(models.Model):
     team1 = models.ForeignKey(Team, related_name='home', on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name='guest', on_delete=models.CASCADE)
-    date = models.DateField()
-    status = models.IntegerField()
-    team1_score = models.IntegerField()
-    team2_score = models.IntegerField()
-    team1_possession = models.IntegerField()
-    team2_possession = models.IntegerField()
-    team1_shots = models.IntegerField()
-    team2_shots = models.IntegerField()
-    team1_corner = models.IntegerField()
-    team2_corner = models.IntegerField()
-    team1_point = models.IntegerField(default=0)
-    team2_point = models.IntegerField(default=0)
+    date = models.DateField(blank=True)
+    status = models.IntegerField(blank=True)
+    team1_score = models.IntegerField(blank=True)
+    team2_score = models.IntegerField(blank=True)
+    team1_possession = models.IntegerField(blank=True)
+    team2_possession = models.IntegerField(blank=True)
+    team1_shots = models.IntegerField(blank=True)
+    team2_shots = models.IntegerField(blank=True)
+    team1_corner = models.IntegerField(blank=True)
+    team2_corner = models.IntegerField(blank=True)
+    team1_point = models.IntegerField(default=0, blank=True)
+    team2_point = models.IntegerField(default=0, blank=True)
 
 
 class Game_Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
-    playerNumber = models.CharField(max_length=20)
-    post = models.CharField(max_length=20)
-    changingTime = models.CharField(max_length=20)
+    playerNumber = models.CharField(max_length=20, blank=True)
+    post = models.CharField(max_length=20, blank=True)
+    changingTime = models.CharField(max_length=20, blank=True)
 
 
 class Game_Report(models.Model):
@@ -82,12 +72,14 @@ class Game_Report(models.Model):
 
 class Game_Event(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    time = models.DateTimeField()
-    text = models.TextField()
+    time = models.DateTimeField(blank=True)
+    text = models.TextField(blank=True)
+
 
 class Competition(models.Model):
     class Meta:
-        abstract=True
+        abstract = True
+
 
 class LeagueCompetition(models.Model):
     pass
@@ -96,24 +88,25 @@ class LeagueCompetition(models.Model):
 class CupCompetition(models.Model):
     pass
 
+
 class League(models.Model):
-    type = models.CharField(choices=(('F' ,'FootBall'),('B','BaskerBall')))
-    teams_number=models.IntegerField()
+    type = models.CharField(max_length=1, choices=(('F', 'FootBall'), ('B', 'BaskerBall')))
+    teams_number = models.IntegerField(blank=True)
+
 
 class LeagueRow(models.Model):
-    team= models.ForeignKey(Team,on_delete=models.SET_NULL)
-    finished_game=models.IntegerField()
-    win = models.IntegerField()
-    lose=models.IntegerField()
-    equal= models.IntegerField()
-    point=models.IntegerField()
-    gf=models.IntegerField()
-    ga=models.IntegerField() # recieved goal
+    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+    finished_game = models.IntegerField(blank=True)
+    win = models.IntegerField(blank=True)
+    lose = models.IntegerField(blank=True)
+    equal = models.IntegerField(blank=True)
+    point = models.IntegerField(blank=True)
+    gf = models.IntegerField(blank=True)
+    ga = models.IntegerField(blank=True)  # recieved goal
 
     def different_goal(self):
-        return self.gf-self.ga
+        return self.gf - self.ga
 
 
 class Cup(models.Model):
-    type=models.IntegerField(choices=(4,8,16,32,64,128))
-
+    type = models.IntegerField(choices=((4, 4), (8, 8), (16, 16), (32, 32), (64, 64), (128, 128)))

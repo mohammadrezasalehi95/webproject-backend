@@ -1,0 +1,11 @@
+from .models import *
+Team.objects.create(name='t1',bio='asd')
+Team.objects.create(name='t2',bio='asd')
+Team.objects.create(name='t3',bio='asd')
+Team.objects.create(name='t4',bio='asd')
+Team.objects.create(name='t5',bio='asd')
+Team.objects.create(name='t6',bio='asd')
+Team.objects.create(name='t7',bio='asd')
+Team.objects.create(name='t8',bio='asd')
+Team.objects.create(name='t9',bio='asd')
+Game.objects.create()
