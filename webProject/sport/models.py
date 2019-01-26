@@ -46,21 +46,25 @@ class Game(models.Model):
     status = models.IntegerField(blank=True)
     team1_score = models.IntegerField(blank=True)
     team2_score = models.IntegerField(blank=True)
-    team1_possession = models.IntegerField(blank=True)
-    team2_possession = models.IntegerField(blank=True)
-    team1_shots = models.IntegerField(blank=True)
-    team2_shots = models.IntegerField(blank=True)
-    team1_corner = models.IntegerField(blank=True)
-    team2_corner = models.IntegerField(blank=True)
     team1_point = models.IntegerField(default=0, blank=True)
     team2_point = models.IntegerField(default=0, blank=True)
+    type=models.CharField(max_length=20,null=True)
+    bestPlayer=models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
+
+class GameSpecialDetail(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    team1 = models.IntegerField(blank=True)
+    team2 = models.IntegerField(blank=True)
+    title=models.CharField(max_length=20,null=True)
 
 
 class Game_Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    pid = models.ForeignKey(Profile, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
-    playerNumber = models.CharField(max_length=20, blank=True)
     post = models.CharField(max_length=20, blank=True)
+    changingTime = models.CharField(max_length=20, blank=True)
+    playTime = models.CharField(max_length=20, blank=True)
     changingTime = models.CharField(max_length=20, blank=True)
 
 

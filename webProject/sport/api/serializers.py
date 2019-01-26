@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group
 
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -15,7 +16,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ('url', 'name')
-
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -66,28 +66,48 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class GameResultSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Game
-        fields = ('team1','team2','date','status','team1_score','team2_score','team1_point','team2_point')
+        fields = '__all__'
+
 
 class MemberTeamSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Profile
-        fields = ('name','born','rule','squad','previousClub','image')
+        fields = ('name', 'born', 'rule', 'squad', 'previousClub', 'image')
+
 
 class LeagueSerializer(serializers.ModelSerializer):
     class Meta:
-        model=League
-        fields= '__all__'
-class FootBallSpringDetailSerializer(serializers.ModelSerializer):
+        model = League
+        fields = '__all__'
 
+
+class FootBallSpringDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = FootBallSpringDetail
-        exclude = ('profile', )
-class BasketSpringDetailSerializer(serializers.ModelSerializer):
+        exclude = ('profile',)
 
+
+class BasketSpringDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasketSpringDetail
-        exclude = ('profile', )
+        exclude = ('profile',)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+
+class GameSpecialDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameSpecialDetail
+        fields = '__all__'
+
+
+class GameMembersDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game_Player
+        fields = '__all__'
