@@ -1,7 +1,4 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 
@@ -19,25 +16,27 @@ class Team(models.Model):
 class New(models.Model):
     title = models.TextField(max_length=500)
     subtitle = models.TextField(max_length=500)
+    content = models.TextField(max_length=2000)
     image = models.ImageField(upload_to='assets/sport/news', null=True)
 
 
 class Profile(models.Model):
-    pid=models.IntegerField()
-    name=models.CharField(max_length=20)
-    bio=models.TextField(max_length=500)
-    gender=models.CharField(max_length=5)
-    image=models.ImageField(upload_to='assets/sport/players',null=True)
-    born=models.DateField()
-    age=models.IntegerField()
-    height=models.IntegerField()
-    weight=models.IntegerField()
-    currentTeam=models.ForeignKey(Team,on_delete=models.CASCADE,null=True)
-    national=models.CharField(max_length=20)
-    rule=models.CharField(max_length=20)
-    previousClub=models.CharField(max_length=20,null=True)
-    squad=models.CharField(max_length=20,null=True)
-    type=models.CharField(max_length=20,null=True)
+    pid = models.IntegerField()
+    name = models.CharField(max_length=20)
+    bio = models.TextField(max_length=500)
+    gender = models.CharField(max_length=5)
+    image = models.ImageField(upload_to='assets/sport/players', null=True)
+    born = models.DateField(blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True)
+    height = models.IntegerField(blank=True, null=True)
+    weight = models.IntegerField(blank=True, null=True)
+    currentTeam = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    national = models.CharField(max_length=20, null=True)
+    rule = models.CharField(max_length=20, null=True)
+    previousClub = models.CharField(max_length=20, null=True)
+    squad = models.CharField(max_length=20, null=True)
+    type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
+
 
 class Game(models.Model):
     team1 = models.ForeignKey(Team, related_name='home', on_delete=models.CASCADE)
@@ -48,14 +47,15 @@ class Game(models.Model):
     team2_score = models.IntegerField(blank=True)
     team1_point = models.IntegerField(default=0, blank=True)
     team2_point = models.IntegerField(default=0, blank=True)
-    type=models.CharField(max_length=20,null=True)
-    bestPlayer=models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
+    type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
+    bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+
 
 class GameSpecialDetail(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     team1 = models.IntegerField(blank=True)
     team2 = models.IntegerField(blank=True)
-    title=models.CharField(max_length=20,null=True)
+    title = models.CharField(max_length=20, null=True)
 
 
 class Game_Player(models.Model):
@@ -65,7 +65,6 @@ class Game_Player(models.Model):
     post = models.CharField(max_length=20, blank=True)
     changingTime = models.CharField(max_length=20, blank=True)
     playTime = models.CharField(max_length=20, blank=True)
-    changingTime = models.CharField(max_length=20, blank=True)
 
 
 class Game_Report(models.Model):
@@ -80,24 +79,21 @@ class Game_Event(models.Model):
 
 
 class Competition(models.Model):
+    name= models.CharField(max_length=20, null=True ,blank=True,)
+    match = models.ManyToManyField(to=Game)
     class Meta:
         abstract = True
 
 
-class LeagueCompetition(models.Model):
-    pass
+class Cup(Competition):
+    type = models.IntegerField(choices=((4, 4), (8, 8), (16, 16), (32, 32), (64, 64), (128, 128)))
 
 
-class CupCompetition(models.Model):
-    pass
-
-
-class League(models.Model):
-    type = models.CharField(max_length=1, choices=(('F', 'FootBall'), ('B', 'BaskerBall')))
-    teams_number = models.IntegerField(blank=True)
-
+class League(Competition):
+    type = models.CharField(max_length=1, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
 
 class LeagueRow(models.Model):
+    league = models.ForeignKey(League, on_delete=models.CASCADE, blank=True, null=True)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
     finished_game = models.IntegerField(blank=True)
     win = models.IntegerField(blank=True)
@@ -111,22 +107,19 @@ class LeagueRow(models.Model):
         return self.gf - self.ga
 
 
-class Cup(models.Model):
-    type = models.IntegerField(choices=((4, 4), (8, 8), (16, 16), (32, 32), (64, 64), (128, 128)))
-
-
-class FootBallSpringDetail(models.Model):
+class FootBallSeasonDetail(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    spring =models.CharField(max_length=20)
-    goals=models.IntegerField(null=True)
-    goalPass=models.IntegerField(null=True)
-    cards =models.IntegerField(null=True)
+    season = models.CharField(max_length=20, blank=True, null=True)
+    goals = models.IntegerField(null=True, blank=True)
+    goalPass = models.IntegerField(null=True, blank=True)
+    cards = models.IntegerField(null=True, blank=True)
 
-class BasketSpringDetail(models.Model):
+
+class BasketSeasonDetail(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    spring = models.CharField(max_length=20)
-    twoscoreGoals=models.IntegerField(null=True)
-    threescoreGoals=models.IntegerField(null=True)
-    fault=models.IntegerField(null=True)
-    ribsndhs=models.IntegerField(null=True)
-    playTime= models.TimeField(null=True)
+    season = models.CharField(max_length=20)
+    twoscoreGoals = models.IntegerField(null=True, blank=True)
+    threescoreGoals = models.IntegerField(null=True, blank=True)
+    fault = models.IntegerField(null=True, blank=True)
+    ribsndhs = models.IntegerField(null=True, blank=True)
+    playTime = models.TimeField(null=True, blank=True)

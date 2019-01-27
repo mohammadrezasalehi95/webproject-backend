@@ -77,28 +77,22 @@ class MemberTeamSerializer(serializers.ModelSerializer):
         fields = ('name', 'born', 'rule', 'squad', 'previousClub', 'image')
 
 
-class LeagueSerializer(serializers.ModelSerializer):
+class LeagueListSerializer(serializers.ModelSerializer):
     class Meta:
         model = League
         fields = '__all__'
 
 
-class FootBallSpringDetailSerializer(serializers.ModelSerializer):
+class FootBallSeasonDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FootBallSpringDetail
+        model = FootBallSeasonDetail
         exclude = ('profile',)
 
 
-class BasketSpringDetailSerializer(serializers.ModelSerializer):
+class BasketSeasonDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BasketSpringDetail
+        model = BasketSeasonDetail
         exclude = ('profile',)
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'
 
 
 class GameSpecialDetailSerializer(serializers.ModelSerializer):
@@ -120,3 +114,8 @@ class GameEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game_Event
         exclude = ('game',)
+
+class LeagueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=LeagueRow
+        fields='__all__'

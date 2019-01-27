@@ -43,22 +43,18 @@ class LeaguesListView(generics.ListAPIView):
     serializer_class = LeagueSerializer
 
 
-class LeagueDetailView(generics.GenericAPIView):
-    pass
-
-
 @api_view(['GET', 'POST'])
-def player_spring_detail(request, pid):
+def player_season_detail(request, pid):
     print(type(pid))
     if request.method == 'GET':
         player = Profile.objects.get(pid=pid)
         if player.type == "footballist":
-            details = player.footballspringdetail_set
-            serializer = FootBallSpringDetailSerializer(details, many=True)
+            details = player.footballseasondetail_set
+            serializer = FootBallSeasonDetailSerializer(details, many=True)
 
         elif player.type == "basketbalist":
-            details = player.basketspringdetail_set
-            serializer = BasketSpringDetailSerializer(details, many=True)
+            details = player.basketseasondetail_set
+            serializer = BasketSeasonDetailSerializer(details, many=True)
         return Response(serializer.data)
 
 
@@ -136,3 +132,10 @@ def game_eventLine(request):
         gameEvents = game.game_event_set
         serializer = GameEventSerializer(gameEvents, many=True)
         return Response(serializer.data)
+
+class LeagueDetailView(generics.ListAPIView):
+    queryset = LeagueRow.objects.all()
+    serializer_class = LeagueSerializer
+
+    def get_queryset(self):
+        return LeagueRow.objects.filter(league_id=self.request.pk).all()

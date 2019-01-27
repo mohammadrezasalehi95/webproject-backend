@@ -7,6 +7,9 @@ pip install django-filter  # Filtering support
 pip install python-decouple
 pip install coverage
 pip install Pillow # library for django ImageField
+pip install django-cors-headers
+pip install faker # fake data for testing
+
 ```
 for seeing coverage of test run following commands:
 ```bash
