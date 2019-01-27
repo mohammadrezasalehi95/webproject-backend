@@ -8,8 +8,23 @@ from .serializers import *
 
 @api_view(['GET', 'POST'])
 def game_results(request, teamName):
+    sortBy = request.query_params.get('sort')
+
     if request.method == 'GET':
-        query = Game.objects.filter(Q(team1__name=teamName) | Q(team2__name=teamName))[:10]
+        if not sortBy:
+            query = Game.objects.filter(Q(team1__name=teamName) | Q(team2__name=teamName))[:10]
+        # elif sortBy=="win":
+        #     query = Team.objects.get(name=teamName)
+        #     games = query.home_set
+        #
+        # elif sortBy=="loose":
+        #     pass
+        # elif sortBy="side":
+        #     pass
+        # elif sortBy="date":
+        # 	query = Game.objects.filter(Q(team1__name=teamName) | Q(team2__name=teamName)).order_by('-date')[:10]
+
+
         serializer = GameResultSerializer(query, many=True)
         return Response(serializer.data)
 
@@ -61,9 +76,10 @@ def game_general_detail(request):
     team2 = request.query_params.get('team2')
     date = request.query_params.get('date')
     if request.method == 'GET':
-        game = Game.objects.get(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
-                                date=date)
+        game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
+                                   date=date)
         serializer = GameResultSerializer(game, many=True)
+
         return Response(serializer.data)
 
 
@@ -77,6 +93,22 @@ def game_special_detail(request):
                                 date=date)
         gameSpecialDetail = game.gamespecialdetail_set
         serializer = GameSpecialDetailSerializer(gameSpecialDetail, many=True)
+        gameReport = Game_Report.objects.get(game=game)
+        report_serializer = GameReportSerializer(gameReport)
+
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def game_report(request):
+    team1 = request.query_params.get('team1')
+    team2 = request.query_params.get('team2')
+    date = request.query_params.get('date')
+    if request.method == 'GET':
+        game = Game.objects.get(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
+                                date=date)
+        gameReport = Game_Report.objects.get(game=game)
+        serializer = GameReportSerializer(gameReport)
         return Response(serializer.data)
 
 
@@ -90,4 +122,17 @@ def game_members_detail(request):
                                 date=date)
         gamePlayersDetail = game.game_player_set
         serializer = GameMembersDetailSerializer(gamePlayersDetail, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def game_eventLine(request):
+    team1 = request.query_params.get('team1')
+    team2 = request.query_params.get('team2')
+    date = request.query_params.get('date')
+    if request.method == 'GET':
+        game = Game.objects.get(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
+                                date=date)
+        gameEvents = game.game_event_set
+        serializer = GameEventSerializer(gameEvents, many=True)
         return Response(serializer.data)

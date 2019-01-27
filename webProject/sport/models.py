@@ -60,7 +60,7 @@ class GameSpecialDetail(models.Model):
 
 class Game_Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    pid = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    pid = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
     name = models.CharField(max_length=20)
     post = models.CharField(max_length=20, blank=True)
     changingTime = models.CharField(max_length=20, blank=True)

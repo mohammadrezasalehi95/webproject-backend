@@ -111,3 +111,12 @@ class GameMembersDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game_Player
         fields = '__all__'
+
+class GameReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game_Report
+        exclude = ('game',)
+class GameEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game_Event
+        exclude = ('game',)

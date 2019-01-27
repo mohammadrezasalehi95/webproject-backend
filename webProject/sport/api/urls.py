@@ -14,5 +14,7 @@ urlpatterns = [
     re_path(r'gamePage/generalDetail/', game_general_detail),
     re_path(r'gamePage/specialDetail/', game_special_detail),
     re_path(r'gamePage/membersDetail/', game_members_detail),
+    re_path(r'gamePage/eventLine/', game_eventLine),
+    re_path(r'gamePage/gameReport/', game_report),
 
 ]
