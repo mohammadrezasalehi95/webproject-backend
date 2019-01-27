@@ -11,6 +11,16 @@ class Team(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
     bio = models.TextField(max_length=500)
     image = models.ImageField(upload_to='assets/sport/team', null=True, default='default_team.jpg')
+    # games=models.ManyToManyField("Game",through="TeamGame")
+#
+# class TeamGame(models.Model):
+#     team = models.ForeignKey(Team, on_delete=models.CASCADE)
+#     game = models.ForeignKey("Game", on_delete=models.CASCADE)
+#     against = models.CharField(max_length=20)
+#     date = models.DateField(blank=True)
+#     status = models.IntegerField(blank=True)
+#     score = models.IntegerField(blank=True)
+#     point = models.IntegerField(default=0, blank=True)
 
 
 class New(models.Model):
@@ -49,7 +59,6 @@ class Game(models.Model):
     team2_point = models.IntegerField(default=0, blank=True)
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
     bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-
 
 class GameSpecialDetail(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

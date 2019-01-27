@@ -1,7 +1,7 @@
 import random
 from random import randint
-from webProject.sport.models import *
-from webProject.sport.utils import rand_str
+from .models import *
+from .utils import rand_str
 from faker import Faker
 from faker.providers import address, date_time, profile, job, company
 
