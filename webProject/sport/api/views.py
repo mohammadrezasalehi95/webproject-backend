@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, F
 from rest_framework.decorators import api_view
 from rest_framework import status, mixins, generics, permissions
 from rest_framework.response import Response
@@ -33,6 +33,35 @@ def team_members(request, teamName):
         serializer = MemberTeamSerializer(members, many=True)
         return Response(serializer.data)
 
+@api_view(['GET', 'POST'])
+def team_news(request, teamName):
+    if request.method == 'GET':
+        query=New.objects.filter(title__contains=teamName).order_by('-releaseTime')[:30]
+        serializer = NewSerializer(query, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+def player_news(request, pid):
+    if request.method == 'GET':
+        player = Profile.objects.get(pid=pid)
+        query=New.objects.filter(title__contains=player.name).order_by('-releaseTime')[:30]
+        serializer = NewSerializer(query, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def game_news(request):
+    team1 = request.query_params.get('team1')
+    team2 = request.query_params.get('team2')
+    date = request.query_params.get('date')
+    if request.method == 'GET':
+        game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
+                                date=date)[0]
+ 
+        news=game.news
+        serializer = NewSerializer(news, many=True)
+        return Response(serializer.data)
+
 
 class LeaguesListView(generics.ListAPIView):
     queryset = League.objects.all()
@@ -44,11 +73,13 @@ def player_season_detail(request, pid):
     print(type(pid))
     if request.method == 'GET':
         player = Profile.objects.get(pid=pid)
-        if player.type == "footballist":
+        print(player.type)
+
+        if player.type == "F":
             details = player.footballseasondetail_set
             serializer = FootBallSeasonDetailSerializer(details, many=True)
 
-        elif player.type == "basketbalist":
+        elif player.type == "B":
             details = player.basketseasondetail_set
             serializer = BasketSeasonDetailSerializer(details, many=True)
         return Response(serializer.data)
@@ -83,6 +114,7 @@ def game_special_detail(request):
     if request.method == 'GET':
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
                                 date=date)[0]
+ 
         gameSpecialDetail = game.gamespecialdetail_set
         serializer = GameSpecialDetailSerializer(gameSpecialDetail, many=True)
         gameReport = Game_Report.objects.get(game=game)
@@ -114,6 +146,39 @@ def game_members_detail(request):
                                 date=date)[0]
         gamePlayersDetail = game.game_player_set
         serializer = GameMembersDetailSerializer(gamePlayersDetail, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+def last_news(request):
+    limit = request.query_params.get('limit')
+    limit=int(limit)
+    if request.method == 'GET':
+        query=New.objects.all().order_by('-releaseTime')[:limit]
+        serializer=NewSerializer(query,many=True)
+        return Response(serializer.data)
+@api_view(['GET', 'POST'])
+def favorite_news(request):
+    user = request.query_params.get('user')
+    if request.method == 'GET':
+        query=User.objects.get(user=user)
+        favoriteNews =query.favoriteNews
+        serializer=NewSerializer(favoriteNews,many=True)
+        return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+def games(request):
+    if request.method == 'GET':
+        query=Game.objects.filter(team1__lt=F('team2')).order_by('-date')
+        serializer=GameResultSerializer(query,many=True)
+        return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+def favorite_games(request):
+    user = request.query_params.get('user')
+    if request.method == 'GET':
+        query=User.objects.get(user=user)
+        favoriteGames =query.favoriteGames
+        serializer=GameResultSerializer(favoriteGames,many=True)
         return Response(serializer.data)
 
 

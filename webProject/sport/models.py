@@ -27,6 +27,7 @@ class New(models.Model):
     title = models.TextField(max_length=500)
     subtitle = models.TextField(max_length=500)
     content = models.TextField(max_length=2000)
+    releaseTime=models.DateTimeField(auto_now_add=True,null=True)
     image = models.ImageField(upload_to='assets/sport/news', null=True)
 
 
@@ -48,6 +49,10 @@ class Profile(models.Model):
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
 
 
+
+
+
+
 class Game(models.Model):
     team1 = models.ForeignKey(Team, related_name='home', on_delete=models.CASCADE)
     team2 = models.ForeignKey(Team, related_name='guest', on_delete=models.CASCADE)
@@ -59,7 +64,7 @@ class Game(models.Model):
     team2_point = models.IntegerField(default=0, blank=True)
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
     bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-
+    news=models.ManyToManyField(to=New)
 class GameSpecialDetail(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     team1 = models.IntegerField(blank=True)

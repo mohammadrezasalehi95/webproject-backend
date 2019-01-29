@@ -119,8 +119,8 @@ class LeagueSerializer(serializers.ModelSerializer):
     class Meta:
         model=LeagueRow
         fields='__all__'
-#
-# class TeamGameSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model=TeamGame
-#         fields='__all__'
+
+class NewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=New
+        fields='__all__'
