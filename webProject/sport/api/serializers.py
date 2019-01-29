@@ -124,3 +124,8 @@ class NewSerializer(serializers.ModelSerializer):
     class Meta:
         model=New
         fields='__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Comment
+        fields='__all__'

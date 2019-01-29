@@ -23,5 +23,9 @@ urlpatterns = [
     re_path(r'mainPage/favoriteNews', favorite_news),
     re_path(r'mainPage/allGames', games),
     re_path(r'mainPage/favoriteGames', favorite_games),
+    re_path(r'newPage/data/(?P<pk>\d{0,50})', new_data),
+    re_path(r'newPage/comments/(?P<pk>\d{0,50})', new_comments),
+    re_path(r'newPage/addComment/(?P<pk>\d{0,50})', add_comment),
+    re_path(r'newPage/related/(?P<pk>\d{0,50})', related_news),
 
 ]

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
@@ -22,6 +23,15 @@ class Team(models.Model):
 #     score = models.IntegerField(blank=True)
 #     point = models.IntegerField(default=0, blank=True)
 
+class SiteUser(models.Model):
+    user=models.OneToOneField(to=User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=20, primary_key=True)
+    age = models.IntegerField()
+    bio = models.TextField(max_length=2000)
+    email=models.EmailField()
+    image =models.ImageField(upload_to='assets/sport/users', null=True)
+    favoriteNews=models.ManyToManyField("New")
+    favoriteGames=models.ManyToManyField("Game")
 
 class New(models.Model):
     title = models.TextField(max_length=500)
@@ -29,8 +39,17 @@ class New(models.Model):
     content = models.TextField(max_length=2000)
     releaseTime=models.DateTimeField(auto_now_add=True,null=True)
     image = models.ImageField(upload_to='assets/sport/news', null=True)
+    source = models.CharField(max_length=20,null=True)
+    relateds=models.ManyToManyField("New",blank=True)
+    media = models.FileField(upload_to='assets/sport/news', null=True)
 
 
+
+class Comment(models.Model):
+    user=models.ForeignKey(SiteUser, on_delete=models.CASCADE,null=True)
+    new=models.ForeignKey(New, on_delete=models.CASCADE)   
+    time=models.DateTimeField(auto_now_add=True)
+    text=models.TextField(max_length=500)
 class Profile(models.Model):
     pid = models.IntegerField()
     name = models.CharField(max_length=20)
@@ -65,6 +84,9 @@ class Game(models.Model):
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
     bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     news=models.ManyToManyField(to=New)
+    media1 = models.FileField(upload_to='assets/sport/games', null=True)
+    media2 = models.FileField(upload_to='assets/sport/games', null=True)
+
 class GameSpecialDetail(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     team1 = models.IntegerField(blank=True)

@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+
 from django.db.models import Q, F
 from rest_framework.decorators import api_view
 from rest_framework import status, mixins, generics, permissions
@@ -47,6 +50,41 @@ def player_news(request, pid):
         query=New.objects.filter(title__contains=player.name).order_by('-releaseTime')[:30]
         serializer = NewSerializer(query, many=True)
         return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+def new_data(request, pk):
+    if request.method == 'GET':
+        new = New.objects.get(pk=pk)
+        serializer = NewSerializer(new)
+        return Response(serializer.data)
+@api_view(['GET', 'POST'])
+def related_news(request, pk):
+    if request.method == 'GET':
+        new = New.objects.get(pk=pk)
+        if new.relateds.count():
+            serializer = NewSerializer(new.relateds,many=True)
+        
+        else:
+            query=New.objects.filter(reduce(operator.or_,(Q(title__icontains=x) for x in new.subtitle.split('_'))))
+            serializer = NewSerializer(query,many=True)
+
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def new_comments(request,pk):
+    if request.method == 'GET':
+        new = New.objects.get(pk=pk)
+        query=new.comment_set
+        serializer = CommentSerializer(query,many=True)
+        return Response(serializer.data)
+@api_view(['GET', 'POST'])
+def add_comment(request,pk):
+    if request.method == 'POST':
+        new = New.objects.get(pk=pk)
+        new.comment_set.create(text=request.data['text'])
+
+        return Response({})
 
 
 @api_view(['GET', 'POST'])
