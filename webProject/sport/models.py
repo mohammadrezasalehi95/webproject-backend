@@ -9,7 +9,7 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=20)
     bio = models.TextField(max_length=500)
     image = models.ImageField(upload_to='assets/sport/team', null=True, default='default_team.jpg')
     # games=models.ManyToManyField("Game",through="TeamGame")
@@ -73,8 +73,8 @@ class Profile(models.Model):
 
 
 class Game(models.Model):
-    team1 = models.ForeignKey(Team, related_name='home', on_delete=models.CASCADE)
-    team2 = models.ForeignKey(Team, related_name='guest', on_delete=models.CASCADE)
+    team1 = models.ForeignKey(Team, related_name='home', on_delete=models.SET_NULL, null=True)
+    team2 = models.ForeignKey(Team, related_name='guest', on_delete=models.SET_NULL, null=True)
     date = models.DateField(blank=True)
     status = models.IntegerField(blank=True)
     team1_score = models.IntegerField(blank=True)
@@ -96,15 +96,15 @@ class GameSpecialDetail(models.Model):
 
 class Game_Player(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    pid = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True)
+    pid = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=20)
     post = models.CharField(max_length=20, blank=True)
     changingTime = models.CharField(max_length=20, blank=True)
-    playTime = models.CharField(max_length=20, blank=True)
+    playTime = models.IntegerField(max_length=20, blank=True)
 
 
 class Game_Report(models.Model):
-    game = models.OneToOneField(Game, on_delete=models.CASCADE)
+    game = models.OneToOneField(Game, on_delete=models.CASCADE, primary_key=True)
     last_report = models.TextField(max_length=500)
 
 
@@ -115,7 +115,7 @@ class Game_Event(models.Model):
 
 
 class Competition(models.Model):
-    name= models.CharField(max_length=20, null=True ,blank=True,)
+    name = models.CharField(max_length=20, null=True, blank=True, )
     match = models.ManyToManyField(to=Game)
     class Meta:
         abstract = True
@@ -143,7 +143,7 @@ class LeagueRow(models.Model):
         return self.gf - self.ga
 
 
-class FootBallSeasonDetail(models.Model):
+class  FootBallSeasonDetail(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     season = models.CharField(max_length=20, blank=True, null=True)
     goals = models.IntegerField(null=True, blank=True)
@@ -158,4 +158,4 @@ class BasketSeasonDetail(models.Model):
     threescoreGoals = models.IntegerField(null=True, blank=True)
     fault = models.IntegerField(null=True, blank=True)
     ribsndhs = models.IntegerField(null=True, blank=True)
-    playTime = models.TimeField(null=True, blank=True)
+    playTime = models.IntegerField(null=True, blank=True)

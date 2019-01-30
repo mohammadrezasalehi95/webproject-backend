@@ -155,9 +155,6 @@ def game_special_detail(request):
  
         gameSpecialDetail = game.gamespecialdetail_set
         serializer = GameSpecialDetailSerializer(gameSpecialDetail, many=True)
-        gameReport = Game_Report.objects.get(game=game)
-        report_serializer = GameReportSerializer(gameReport)
-
         return Response(serializer.data)
 
 
