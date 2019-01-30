@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
+from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
@@ -13,6 +14,8 @@ class Team(models.Model):
     bio = models.TextField(max_length=500)
     image = models.ImageField(upload_to='assets/sport/team', null=True, default='default_team.jpg')
     # games=models.ManyToManyField("Game",through="TeamGame")
+
+
 #
 # class TeamGame(models.Model):
 #     team = models.ForeignKey(Team, on_delete=models.CASCADE)
@@ -23,33 +26,38 @@ class Team(models.Model):
 #     score = models.IntegerField(blank=True)
 #     point = models.IntegerField(default=0, blank=True)
 
-class SiteUser(models.Model):
-    user=models.OneToOneField(to=User,on_delete=models.CASCADE)
-    name = models.CharField(max_length=20, primary_key=True)
-    age = models.IntegerField()
-    bio = models.TextField(max_length=2000)
-    email=models.EmailField()
-    image =models.ImageField(upload_to='assets/sport/users', null=True)
-    favoriteNews=models.ManyToManyField("New")
-    favoriteGames=models.ManyToManyField("Game")
+class SiteUser(AbstractUser):
+    age = models.IntegerField(blank=True, null=True)
+    bio = models.TextField(max_length=2000, blank=True, null=True)
+    image = models.ImageField(upload_to='assets/sport/users', null=True, blank=True)
+    favoriteNews = models.ManyToManyField("New", blank=True, null=True)
+    favoriteGames = models.ManyToManyField("Game", blank=True, null=True)
+
+    def __str__(self):
+        return self.email
+
+    class Meta(AbstractUser.Meta):
+        swappable = 'AUTH_USER_MODEL'
+
 
 class New(models.Model):
     title = models.TextField(max_length=500)
     subtitle = models.TextField(max_length=500)
     content = models.TextField(max_length=2000)
-    releaseTime=models.DateTimeField(auto_now_add=True,null=True)
+    releaseTime = models.DateTimeField(auto_now_add=True, null=True)
     image = models.ImageField(upload_to='assets/sport/news', null=True)
-    source = models.CharField(max_length=20,null=True)
-    relateds=models.ManyToManyField("New",blank=True)
+    source = models.CharField(max_length=20, null=True)
+    relateds = models.ManyToManyField("New", blank=True)
     media = models.FileField(upload_to='assets/sport/news', null=True)
 
 
-
 class Comment(models.Model):
-    user=models.ForeignKey(SiteUser, on_delete=models.CASCADE,null=True)
-    new=models.ForeignKey(New, on_delete=models.CASCADE)   
-    time=models.DateTimeField(auto_now_add=True)
-    text=models.TextField(max_length=500)
+    user = models.ForeignKey(SiteUser, on_delete=models.CASCADE, null=True)
+    new = models.ForeignKey(New, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(max_length=500)
+
+
 class Profile(models.Model):
     pid = models.IntegerField()
     name = models.CharField(max_length=20)
@@ -68,10 +76,6 @@ class Profile(models.Model):
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
 
 
-
-
-
-
 class Game(models.Model):
     team1 = models.ForeignKey(Team, related_name='home', on_delete=models.SET_NULL, null=True)
     team2 = models.ForeignKey(Team, related_name='guest', on_delete=models.SET_NULL, null=True)
@@ -83,9 +87,10 @@ class Game(models.Model):
     team2_point = models.IntegerField(default=0, blank=True)
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
     bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    news=models.ManyToManyField(to=New)
+    news = models.ManyToManyField(to=New)
     media1 = models.FileField(upload_to='assets/sport/games', null=True)
     media2 = models.FileField(upload_to='assets/sport/games', null=True)
+
 
 class GameSpecialDetail(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
@@ -117,6 +122,7 @@ class Game_Event(models.Model):
 class Competition(models.Model):
     name = models.CharField(max_length=20, null=True, blank=True, )
     match = models.ManyToManyField(to=Game)
+
     class Meta:
         abstract = True
 
@@ -127,6 +133,7 @@ class Cup(Competition):
 
 class League(Competition):
     type = models.CharField(max_length=1, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
+
 
 class LeagueRow(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE, blank=True, null=True)
@@ -143,7 +150,7 @@ class LeagueRow(models.Model):
         return self.gf - self.ga
 
 
-class  FootBallSeasonDetail(models.Model):
+class FootBallSeasonDetail(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     season = models.CharField(max_length=20, blank=True, null=True)
     goals = models.IntegerField(null=True, blank=True)

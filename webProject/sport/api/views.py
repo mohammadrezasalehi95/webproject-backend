@@ -7,6 +7,11 @@ from rest_framework import status, mixins, generics, permissions
 from rest_framework.response import Response
 
 from .serializers import *
+from rest_framework import generics
+
+class UserListView(generics.ListCreateAPIView):
+    queryset = SiteUser.objects.all()
+    serializer_class = UserSerializer
 
 
 @api_view(['GET', 'POST'])

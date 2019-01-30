@@ -96,4 +96,4 @@ FootBallSeasonDetail = [FootBallSeasonDetail.objects.create() for i in range(FOO
 
 gameSpecialDetail = [GameSpecialDetail.objects.create() for i in range(GAME_SPECIAL_DETAIL)]
 
-cupes = [Cup.objects.create() for _ in range(CUP_NUM)]
+# cupes = [Cup.objects.create() for _ in range(CUP_NUM)]
