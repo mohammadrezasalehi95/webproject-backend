@@ -10,7 +10,7 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20,primary_key=True)
     bio = models.TextField(max_length=500)
     image = models.ImageField(upload_to='assets/sport/team', null=True, default='default_team.jpg')
     # games=models.ManyToManyField("Game",through="TeamGame")
@@ -48,7 +48,8 @@ class New(models.Model):
     image = models.ImageField(upload_to='assets/sport/news', null=True)
     source = models.CharField(max_length=20, null=True)
     relateds = models.ManyToManyField("New", blank=True)
-    media = models.FileField(upload_to='assets/sport/news', null=True)
+    media = models.FileField(upload_to='assets/sport/news', null=True,blank=True)
+    likes = models.IntegerField(blank=True,default=0)
 
 
 class Comment(models.Model):
@@ -88,8 +89,9 @@ class Game(models.Model):
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
     bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     news = models.ManyToManyField(to=New)
-    media1 = models.FileField(upload_to='assets/sport/games', null=True)
-    media2 = models.FileField(upload_to='assets/sport/games', null=True)
+    media1 = models.FileField(upload_to='assets/sport/games', null=True,blank=True)
+    media2 = models.FileField(upload_to='assets/sport/games', null=True,blank=True)
+    likes = models.IntegerField(blank=True,default=0)
 
 
 class GameSpecialDetail(models.Model):

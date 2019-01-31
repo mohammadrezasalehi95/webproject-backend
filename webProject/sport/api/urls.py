@@ -21,6 +21,7 @@ urlpatterns = [
     re_path(r'gamePage/eventLine/', game_eventLine),
     re_path(r'gamePage/gameReport/', game_report),
     re_path(r'gamePage/gameNews/', game_news),
+    re_path(r'gamePage/addFavorite/', add_favorite_game),
     re_path(r'mainPage/lastNews', last_news),
     re_path(r'mainPage/favoriteNews', favorite_news),
     re_path(r'mainPage/allGames', games),
@@ -29,5 +30,7 @@ urlpatterns = [
     re_path(r'newPage/comments/(?P<pk>\d{0,50})', new_comments),
     re_path(r'newPage/addComment/(?P<pk>\d{0,50})', add_comment),
     re_path(r'newPage/related/(?P<pk>\d{0,50})', related_news),
+    re_path(r'newPage/addFavorite/(?P<pk>\d{0,50})',add_favorite_new),
+    re_path(r'isLogin',is_login),
 
 ]

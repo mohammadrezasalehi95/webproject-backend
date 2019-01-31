@@ -90,6 +90,43 @@ def add_comment(request,pk):
         new.comment_set.create(text=request.data['text'])
 
         return Response({})
+@api_view(['GET', 'POST'])
+def add_favorite_new(request,pk):
+    if request.method == 'POST':
+        
+        new = New.objects.get(pk=pk)
+        new.likes+=1
+        new.save()
+        # print(vars(request))
+        # request.user.favoriteNews.add(new)
+        # u=SiteUser.objects.get(request.user)
+        # repo(request)
+        return Response({})
+# User.objects
+
+@api_view(['GET', 'POST'])
+def add_favorite_game(request):
+    team1 = request.query_params.get('team1')
+    team2 = request.query_params.get('team2')
+    date = request.query_params.get('date')
+    if request.method == 'POST':
+        game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
+                                   date=date)[0]
+        game.likes += 1
+        game.save()
+        # request.user.favoriteGames.add(game)
+
+        return Response({})
+
+
+
+@api_view(['GET', 'POST'])
+def is_login(request):
+    key = request.query_params.get('key')
+
+    if request.method == 'GET':
+        print(key)
+        return Response(False)
 
 
 @api_view(['GET', 'POST'])
