@@ -13,7 +13,7 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
 class Team(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
-    bio = models.TextField(max_length=500)
+    bio = models.TextField(max_length=500,null=True,blank=True)
     image = models.ImageField(upload_to='assets/sport/team', null=True, default='default_team.jpg')
 
 
@@ -88,8 +88,8 @@ class Game(models.Model):
     team1_point = models.IntegerField(default=0, blank=True, null=True)
     team2_point = models.IntegerField(default=0, blank=True, null=True)
     type = models.CharField(max_length=20, null=True, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
-    bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    news = models.ManyToManyField(to=New)
+    bestPlayer = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True,blank=True)
+    news = models.ManyToManyField(to=New,null=True,blank=True)
     media1 = models.FileField(upload_to='assets/sport/games', null=True, blank=True)
     media2 = models.FileField(upload_to='assets/sport/games', null=True, blank=True)
     likes = models.IntegerField(blank=True, default=0)
