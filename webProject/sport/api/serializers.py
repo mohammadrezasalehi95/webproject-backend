@@ -77,7 +77,7 @@ class MemberTeamSerializer(serializers.ModelSerializer):
         fields = ('name', 'born', 'rule', 'squad', 'previousClub', 'image')
 
 
-class LeagueListSerializer(serializers.ModelSerializer):
+class CompetitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = League
         fields = '__all__'
@@ -119,7 +119,7 @@ class GameEventSerializer(serializers.ModelSerializer):
         exclude = ('game',)
 
 
-class LeagueSerializer(serializers.ModelSerializer):
+class LeagueRowSerializer(serializers.ModelSerializer):
     class Meta:
         model = LeagueRow
         fields = '__all__'

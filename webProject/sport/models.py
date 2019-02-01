@@ -93,6 +93,7 @@ class Game(models.Model):
     media1 = models.FileField(upload_to='assets/sport/games', null=True, blank=True)
     media2 = models.FileField(upload_to='assets/sport/games', null=True, blank=True)
     likes = models.IntegerField(blank=True, default=0)
+    competition=models.ForeignKey('Competition',on_delete=models.CASCADE)
 
 
 class GameSpecialDetail(models.Model):
@@ -123,7 +124,7 @@ class Game_Event(models.Model):
 
 
 class Competition(models.Model):
-    name = models.CharField(max_length=20, null=True, blank=True, )
+    name = models.CharField(max_length=20,primary_key=True )
     type = Choices('League', 'Cup')
     field = models.CharField(max_length=1, choices=(('F', 'FootBall'), ('B', 'BasketBall')))
     current = models.BooleanField(default=True)
@@ -131,14 +132,14 @@ class Competition(models.Model):
 
 
 class Cup(Competition):
-    teamnumber = models.IntegerField(choices=((4, 4), (8, 8), (16, 16), (32, 32), (64, 64), (128, 128)),
+    team_number = models.IntegerField(choices=((4, 4), (8, 8), (16, 16), (32, 32), (64, 64), (128, 128)),
                                      default=16,
                                      null=True,
                                      blank=True)
 
 
 class League(Competition):
-    teamnumber = models.IntegerField(null=True, blank=True)
+    team_number = models.IntegerField(null=True, blank=True)
 
 
 class LeagueRow(models.Model):

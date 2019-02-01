@@ -298,18 +298,22 @@ def game_eventLine(request):
         return Response(serializer.data)
 
 
-class LeaguesListView(generics.ListAPIView):
+class CompetitionListView(generics.ListAPIView):
     queryset = League.objects.all()
-    serializer_class = LeagueListSerializer
+    serializer_class = CompetitionSerializer
 
 
-class LeagueDetailView(generics.ListAPIView):
+class LeagueRowView(generics.ListAPIView):
     queryset = LeagueRow.objects.all()
-    serializer_class = LeagueSerializer
+    serializer_class = LeagueRowSerializer
 
     def get_queryset(self):
-        return LeagueRow.objects.filter(league_id=self.kwargs['pk']).all()
+        return LeagueRow.objects.filter(league_name=self.kwargs['league_name']).all()
 
+class CompetitionGameView(generics.ListAPIView):
+    serializers_class=GameResultSerializer
+    def get_queryset(self):
+        return  Game.objects.filter(competition__name=self.kwargs['competition_name']).all()
 
 @api_view(['GET', 'POST'])
 def test(request):

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import force_authenticate, APIRequestFactory
 
-from sport.api.views import *
+from .api.views import *
 
 
 class getTestCase(TestCase):

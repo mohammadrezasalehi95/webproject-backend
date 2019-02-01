@@ -10,8 +10,9 @@ urlpatterns = [
     re_path(r'teamPage/teamMembers/(?P<teamName>\w{0,50})', views.team_members, name="teamMembers"),
     re_path(r'teamPage/teamNews/(?P<teamName>\w{0,50})', views.team_news),
     path('accounts/', include('allauth.urls')),
-    path('league/', views.LeaguesListView.as_view()),
-    path('league/<int:pk>', views.LeagueDetailView.as_view()),
+    path('competition/', views.CompetitionListView.as_view()),
+    path('competition/game/<str:competition_name>', views.CompetitionGameView.as_view()),
+    path('league/<str:league_name>', views.LeagueRowView.as_view()),
     re_path(r'^', include('django.contrib.auth.urls')),
     re_path('^rest-auth/registration/account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email,
             name='account_confirm_email'),
@@ -38,7 +39,6 @@ urlpatterns = [
     re_path(r'newPage/related/(?P<pk>\d{0,50})', related_news),
     re_path(r'newPage/addFavorite/(?P<pk>\d{0,50})', add_favorite_new),
     re_path(r'isLogin', is_login),
-
 ]
 
 
