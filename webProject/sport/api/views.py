@@ -1,6 +1,6 @@
 import operator
 from functools import reduce
-
+import logging
 from django.db.models import Q, F
 from rest_framework.decorators import api_view
 from rest_framework import status, mixins, generics, permissions
@@ -16,10 +16,12 @@ class UserListView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
 
+logger = logging.getLogger()
+
+
 @api_view(['GET', 'POST'])
 def game_results(request, teamName):
     sortBy = request.query_params.get('sort')
-
     if request.method == 'GET':
         query = Game.objects.filter(Q(team1__name=teamName))
         if sortBy == "win":
@@ -322,3 +324,10 @@ class CompetitionGameView(generics.ListAPIView):
 def test(request):
     print("something")
     return Response(request.GET)
+
+
+class CupDetailView(generics.ListAPIView):
+    serializer_class = CupRowSerializer
+
+    def get_queryset(self):
+        return CupRow.objects.filter(cup=self.kwargs['cup_name']).all()

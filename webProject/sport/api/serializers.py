@@ -135,3 +135,11 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+
+
+
+class CupRowSerializer(serializers.models):
+    class Meta:
+        model=CupRow
+        fields='__all__'
+    pass

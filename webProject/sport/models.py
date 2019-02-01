@@ -173,3 +173,8 @@ class BasketSeasonDetail(models.Model):
     fault = models.IntegerField(null=True, blank=True)
     ribsndhs = models.IntegerField(null=True, blank=True)
     playTime = models.IntegerField(null=True, blank=True)
+
+class CupRow(models.Model):
+    cup=models.ForeignKey(to=Cup)
+    place=models.IntegerField(unique=True)
+    pass
