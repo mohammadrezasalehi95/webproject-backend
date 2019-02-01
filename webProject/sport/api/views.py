@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from .serializers import *
 from rest_framework import generics
 
+
 class UserListView(generics.ListCreateAPIView):
     queryset = SiteUser.objects.all()
     serializer_class = UserSerializer
@@ -20,13 +21,13 @@ def game_results(request, teamName):
 
     if request.method == 'GET':
         query = Game.objects.filter(Q(team1__name=teamName))
-        if sortBy=="win":
-            query=query.order_by().order_by('-status')[:10]
-        elif sortBy=="loose":
-            query=query.order_by().order_by('status')[:10]
-        elif sortBy=="side":
-            query=query.order_by().order_by('-team2_name')[:10]
-        elif sortBy=="date":
+        if sortBy == "win":
+            query = query.order_by().order_by('-status')[:10]
+        elif sortBy == "loose":
+            query = query.order_by().order_by('status')[:10]
+        elif sortBy == "side":
+            query = query.order_by().order_by('-team2_name')[:10]
+        elif sortBy == "date":
             query = query.order_by().order_by('-date')[:10]
 
         serializer = GameResultSerializer(query, many=True)
@@ -41,20 +42,23 @@ def team_members(request, teamName):
         serializer = MemberTeamSerializer(members, many=True)
         return Response(serializer.data)
 
+
 @api_view(['GET', 'POST'])
 def team_news(request, teamName):
     if request.method == 'GET':
-        query=New.objects.filter(title__contains=teamName).order_by('-releaseTime')[:30]
+        query = New.objects.filter(title__contains=teamName).order_by('-releaseTime')[:30]
         serializer = NewSerializer(query, many=True)
         return Response(serializer.data)
+
 
 @api_view(['GET', 'POST'])
 def player_news(request, pid):
     if request.method == 'GET':
         player = Profile.objects.get(pid=pid)
-        query=New.objects.filter(title__contains=player.name).order_by('-releaseTime')[:30]
+        query = New.objects.filter(title__contains=player.name).order_by('-releaseTime')[:30]
         serializer = NewSerializer(query, many=True)
         return Response(serializer.data)
+
 
 @api_view(['GET', 'POST'])
 def new_data(request, pk):
@@ -62,47 +66,55 @@ def new_data(request, pk):
         new = New.objects.get(pk=pk)
         serializer = NewSerializer(new)
         return Response(serializer.data)
+
+
 @api_view(['GET', 'POST'])
 def related_news(request, pk):
     if request.method == 'GET':
         new = New.objects.get(pk=pk)
         if new.relateds.count():
-            serializer = NewSerializer(new.relateds,many=True)
-        
+            serializer = NewSerializer(new.relateds, many=True)
+
         else:
-            query=New.objects.filter(reduce(operator.or_,(Q(title__icontains=x) for x in new.subtitle.split('_'))))
-            serializer = NewSerializer(query,many=True)
+            query = New.objects.filter(reduce(operator.or_, (Q(title__icontains=x) for x in new.subtitle.split('_'))))
+            serializer = NewSerializer(query, many=True)
 
         return Response(serializer.data)
 
 
 @api_view(['GET', 'POST'])
-def new_comments(request,pk):
+def new_comments(request, pk):
     if request.method == 'GET':
         new = New.objects.get(pk=pk)
-        query=new.comment_set
-        serializer = CommentSerializer(query,many=True)
+        query = new.comment_set
+        serializer = CommentSerializer(query, many=True)
         return Response(serializer.data)
+
+
 @api_view(['GET', 'POST'])
-def add_comment(request,pk):
+def add_comment(request, pk):
     if request.method == 'POST':
         new = New.objects.get(pk=pk)
         new.comment_set.create(text=request.data['text'])
 
         return Response({})
+
+
 @api_view(['GET', 'POST'])
-def add_favorite_new(request,pk):
+def add_favorite_new(request, pk):
     if request.method == 'POST':
-        
+        user = request.user
+        if user.is_authenticated:
+            print("**********")
         new = New.objects.get(pk=pk)
-        new.likes+=1
+        new.likes += 1
         new.save()
         # print(vars(request))
         # request.user.favoriteNews.add(new)
         # u=SiteUser.objects.get(request.user)
         # repo(request)
         return Response({})
-# User.objects
+
 
 @api_view(['GET', 'POST'])
 def add_favorite_game(request):
@@ -117,7 +129,6 @@ def add_favorite_game(request):
         # request.user.favoriteGames.add(game)
 
         return Response({})
-
 
 
 @api_view(['GET', 'POST'])
@@ -136,9 +147,9 @@ def game_news(request):
     date = request.query_params.get('date')
     if request.method == 'GET':
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
-                                date=date)[0]
- 
-        news=game.news
+                                   date=date)[0]
+
+        news = game.news
         serializer = NewSerializer(news, many=True)
         return Response(serializer.data)
 
@@ -193,8 +204,8 @@ def game_special_detail(request):
     date = request.query_params.get('date')
     if request.method == 'GET':
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
-                                date=date)[0]
- 
+                                   date=date)[0]
+
         gameSpecialDetail = game.gamespecialdetail_set
         serializer = GameSpecialDetailSerializer(gameSpecialDetail, many=True)
         return Response(serializer.data)
@@ -207,7 +218,7 @@ def game_report(request):
     date = request.query_params.get('date')
     if request.method == 'GET':
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
-                                date=date)[0]
+                                   date=date)[0]
         gameReport = Game_Report.objects.get(game=game)
         serializer = GameReportSerializer(gameReport)
         return Response(serializer.data)
@@ -220,42 +231,47 @@ def game_members_detail(request):
     date = request.query_params.get('date')
     if request.method == 'GET':
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
-                                date=date)[0]
+                                   date=date)[0]
         gamePlayersDetail = game.game_player_set
         serializer = GameMembersDetailSerializer(gamePlayersDetail, many=True)
         return Response(serializer.data)
 
+
 @api_view(['GET', 'POST'])
 def last_news(request):
     limit = request.query_params.get('limit')
-    limit=int(limit)
+    limit = int(limit)
     if request.method == 'GET':
-        query=New.objects.all().order_by('-releaseTime')[:limit]
-        serializer=NewSerializer(query,many=True)
+        query = New.objects.all().order_by('-releaseTime')[:limit]
+        serializer = NewSerializer(query, many=True)
         return Response(serializer.data)
+
+
 @api_view(['GET', 'POST'])
 def favorite_news(request):
     user = request.query_params.get('user')
     if request.method == 'GET':
-        query=User.objects.get(user=user)
-        favoriteNews =query.favoriteNews
-        serializer=NewSerializer(favoriteNews,many=True)
+        query = User.objects.get(user=user)
+        favoriteNews = query.favoriteNews
+        serializer = NewSerializer(favoriteNews, many=True)
         return Response(serializer.data)
+
 
 @api_view(['GET', 'POST'])
 def games(request):
     if request.method == 'GET':
-        query=Game.objects.filter(team1__lt=F('team2')).order_by('-date')
-        serializer=GameResultSerializer(query,many=True)
+        query = Game.objects.filter(team1__lt=F('team2')).order_by('-date')
+        serializer = GameResultSerializer(query, many=True)
         return Response(serializer.data)
+
 
 @api_view(['GET', 'POST'])
 def favorite_games(request):
     user = request.query_params.get('user')
     if request.method == 'GET':
-        query=User.objects.get(user=user)
-        favoriteGames =query.favoriteGames
-        serializer=GameResultSerializer(favoriteGames,many=True)
+        query = User.objects.get(user=user)
+        favoriteGames = query.favoriteGames
+        serializer = GameResultSerializer(favoriteGames, many=True)
         return Response(serializer.data)
 
 
@@ -266,10 +282,11 @@ def game_eventLine(request):
     date = request.query_params.get('date')
     if request.method == 'GET':
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
-                                date=date)[0]
+                                   date=date)[0]
         gameEvents = game.game_event_set
         serializer = GameEventSerializer(gameEvents, many=True)
         return Response(serializer.data)
+
 
 class LeagueDetailView(generics.ListAPIView):
     queryset = LeagueRow.objects.all()

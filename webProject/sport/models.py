@@ -30,8 +30,8 @@ class SiteUser(AbstractUser):
     age = models.IntegerField(blank=True, null=True)
     bio = models.TextField(max_length=2000, blank=True, null=True)
     image = models.ImageField(upload_to='assets/sport/users', null=True, blank=True)
-    favoriteNews = models.ManyToManyField("New", blank=True, null=True)
-    favoriteGames = models.ManyToManyField("Game", blank=True, null=True)
+    favoriteNews = models.ManyToManyField("New", blank=True)
+    favoriteGames = models.ManyToManyField("Game", blank=True)
 
     def __str__(self):
         return self.email
@@ -107,7 +107,7 @@ class Game_Player(models.Model):
     name = models.CharField(max_length=20)
     post = models.CharField(max_length=20, blank=True)
     changingTime = models.CharField(max_length=20, blank=True)
-    playTime = models.IntegerField(max_length=20, blank=True)
+    playTime = models.IntegerField( blank=True)
 
 
 class Game_Report(models.Model):
