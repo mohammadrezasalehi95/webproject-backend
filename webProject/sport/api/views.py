@@ -110,10 +110,7 @@ def add_favorite_new(request, pk):
         new = New.objects.get(pk=pk)
         new.likes += 1
         new.save()
-        # print(vars(request))
         # request.user.favoriteNews.add(new)
-        # u=SiteUser.objects.get(request.user)
-        # repo(request)
         return Response({})
 
 
@@ -122,7 +119,12 @@ def add_favorite_game(request):
     team1 = request.query_params.get('team1')
     team2 = request.query_params.get('team2')
     date = request.query_params.get('date')
+    user = request.user
+
     if request.method == 'POST':
+        if user.is_authenticated:
+            print("**********")
+
         game = Game.objects.filter(Q(team1__name=team1, team2__name=team2) | Q(team1__name=team2, team2__name=team1),
                                    date=date)[0]
         game.likes += 1
@@ -248,15 +250,15 @@ def favorite_news(request):
     # user = request.query_params.get('user')
     if request.method == 'GET':
         user = request.user
-        if user.is_authenticated:
+        # if user.is_authenticated:
             # query = User.objects.get(user=user)
-            down_side = datetime.now() - timedelta(days=1)
-            up_side = datetime.now() + timedelta(days=1)
-            favoriteNews = New.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
-            serializer = NewSerializer(favoriteNews, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({})
+        down_side = datetime.now() - timedelta(days=1)
+        up_side = datetime.now() + timedelta(days=1)
+        favoriteNews = New.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
+        serializer = NewSerializer(favoriteNews, many=True)
+        return Response(serializer.data)
+    # else:
+    #     return Response({})
 
 
 @api_view(['GET', 'POST'])
@@ -272,15 +274,15 @@ def favorite_games(request):
     # user = request.query_params.get('user')
     if request.method == 'GET':
         user = request.user
-        if user.is_authenticated:
-            down_side = datetime.now() - timedelta(days=1)
-            up_side = datetime.now() + timedelta(days=1)
-            favoriteGames = Game.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
-            # favoriteGames =user.favoriteGames
-            serializer = GameResultSerializer(favoriteGames, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({})
+        # if user.is_authenticated:
+        down_side = datetime.now() - timedelta(days=1)
+        up_side = datetime.now() + timedelta(days=1)
+        favoriteGames = Game.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
+        # favoriteGames =user.favoriteGames
+        serializer = GameResultSerializer(favoriteGames, many=True)
+        return Response(serializer.data)
+    # else:
+    #     return Response({})
 
 
 @api_view(['GET', 'POST'])
