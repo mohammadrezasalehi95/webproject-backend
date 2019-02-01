@@ -12,7 +12,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('competition/', views.CompetitionListView.as_view()),
     path('competition/game/<str:competition_name>', views.CompetitionGameView.as_view()),
-    path('league/<str:league_name>', views.LeagueRowView.as_view()),
+    path('competition/league/<str:league_name>', views.LeagueRowView.as_view()),
     re_path(r'^', include('django.contrib.auth.urls')),
     re_path('^rest-auth/registration/account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email,
             name='account_confirm_email'),

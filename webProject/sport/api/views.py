@@ -251,7 +251,7 @@ def favorite_news(request):
     if request.method == 'GET':
         user = request.user
         # if user.is_authenticated:
-            # query = User.objects.get(user=user)
+        # query = User.objects.get(user=user)
         down_side = datetime.now() - timedelta(days=1)
         up_side = datetime.now() + timedelta(days=1)
         favoriteNews = New.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
@@ -308,12 +308,15 @@ class LeagueRowView(generics.ListAPIView):
     serializer_class = LeagueRowSerializer
 
     def get_queryset(self):
-        return LeagueRow.objects.filter(league_name=self.kwargs['league_name']).all()
+        return LeagueRow.objects.filter(league=self.kwargs['league_name']).all()
+
 
 class CompetitionGameView(generics.ListAPIView):
-    serializers_class=GameResultSerializer
+    serializer_class = GameResultSerializer
+
     def get_queryset(self):
-        return  Game.objects.filter(competition__name=self.kwargs['competition_name']).all()
+        return Game.objects.filter(competition=self.kwargs['competition_name']).all()
+
 
 @api_view(['GET', 'POST'])
 def test(request):
