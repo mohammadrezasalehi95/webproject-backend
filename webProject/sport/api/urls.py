@@ -1,14 +1,20 @@
+from allauth.account.views import ConfirmEmailView, confirm_email
 from django.urls import path, re_path, include
 
 from .views import *
 from ..api import views
 
 urlpatterns = [
+    path('', test),
     re_path(r'teamPage/gameResults/(?P<teamName>\w{0,50})', views.game_results, name="gameResults"),
     re_path(r'teamPage/teamMembers/(?P<teamName>\w{0,50})', views.team_members, name="teamMembers"),
     re_path(r'teamPage/teamNews/(?P<teamName>\w{0,50})', views.team_news),
+    path('accounts/', include('allauth.urls')),
     path('league/', views.LeaguesListView.as_view()),
     path('league/<int:pk>', views.LeagueDetailView.as_view()),
+    re_path(r'^', include('django.contrib.auth.urls')),
+    re_path('^rest-auth/registration/account-confirm-email/(?P<key>[-:\w]+)/$', confirm_email,
+            name='account_confirm_email'),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('api/v1/users', views.UserListView.as_view()),
@@ -30,7 +36,11 @@ urlpatterns = [
     re_path(r'newPage/comments/(?P<pk>\d{0,50})', new_comments),
     re_path(r'newPage/addComment/(?P<pk>\d{0,50})', add_comment),
     re_path(r'newPage/related/(?P<pk>\d{0,50})', related_news),
-    re_path(r'newPage/addFavorite/(?P<pk>\d{0,50})',add_favorite_new),
-    re_path(r'isLogin',is_login),
+    re_path(r'newPage/addFavorite/(?P<pk>\d{0,50})', add_favorite_new),
+    re_path(r'isLogin', is_login),
 
 ]
+
+
+def a(request, *args):
+    print('salam')

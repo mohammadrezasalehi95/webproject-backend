@@ -1,7 +1,6 @@
 import random
 from random import randint
 from .models import *
-from .utils import rand_str
 from faker import Faker
 from faker.providers import address, date_time, profile, job, company
 
@@ -10,15 +9,15 @@ fake.add_provider(address)
 fake.add_provider(date_time)
 fake.add_provider(job)
 fake.add_provider(company)
-TEAM_NUM = 10
-GAME_NUM = 10
-LEAGUE_NUM = 10
-LEAGUE_ROW_NUM = 10
-PROFILE_NUM = 10
-CUP_NUM = 10
-NEWS_NUM = 10
-GAME_REPORT_NUM = 10
-GAME_EVENT_NUM = 10
+TEAM_NUM = 20
+GAME_NUM = 100
+LEAGUE_NUM = 4
+LEAGUE_ROW_NUM = 6
+PROFILE_NUM = 100
+CUP_NUM = 4
+NEWS_NUM = 30
+GAME_REPORT_NUM = 20
+GAME_EVENT_NUM = 150
 BASKET_S_D_NUM = 10
 FOOTBALL_S_D_NUM = 10
 GAME_SPECIAL_DETAIL = 10
@@ -38,12 +37,12 @@ games = [Game.objects.create(
     team1_point=randint(0, 5),
     team2_point=randint(0, 5),
     bestPlayer_id=randint(0, PROFILE_NUM),
-    type=random.choice('F', 'B'),
+    type=random.choice(('F', 'B')),
 ) for _ in range(GAME_NUM)]
 
 leagues = [League.objects.create(
     name=fake.company(),
-    type=random.choice('F', 'B'),
+    type=random.choice(('F', 'B')),
 ) for _ in range(LEAGUE_NUM)]
 
 league_rows = [LeagueRow.objects.create(
@@ -58,8 +57,8 @@ league_rows = [LeagueRow.objects.create(
 
 profiles = [Profile.objects.create(
     name=fake.name(),
-    type=random.choice('F', 'B'),
-    gender=random.choice('Male', 'Female'),
+    type=random.choice((('F', 'B'))),
+    gender=random.choice(('Male', 'Female')),
     bio=fake.text(),
     height=randint(160, 210),
     weight=randint(55, 100),
@@ -87,12 +86,13 @@ game_events = [Game_Event.objects.create(
 ) for _ in range(GAME_REPORT_NUM)]
 
 basketSeasonDetails = [BasketSeasonDetail.objects.create(
-    profile_id=randint(1,PROFILE_NUM),
+    profile_id=randint(1, PROFILE_NUM),
     season=fake.year(),
-    playTime=random.choice(da)
+    playTime=random.choice()
 ) for _ in range(BASKET_S_D_NUM)]
 
-FootBallSeasonDetail = [FootBallSeasonDetail.objects.create() for i in range(FOOTBALL_S_D_NUM)]
+FootBallSeasonDetail = [FootBallSeasonDetail.objects.create(
+) for i in range(FOOTBALL_S_D_NUM)]
 
 gameSpecialDetail = [GameSpecialDetail.objects.create() for i in range(GAME_SPECIAL_DETAIL)]
 

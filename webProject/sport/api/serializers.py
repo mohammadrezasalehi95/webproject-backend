@@ -5,10 +5,11 @@ from django.contrib.auth.models import User, Group
 
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteUser
-        fields = ('email', 'username', )
+        fields = ('email', 'username',)
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -105,26 +106,32 @@ class GameMembersDetailSerializer(serializers.ModelSerializer):
         model = Game_Player
         fields = '__all__'
 
+
 class GameReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game_Report
         exclude = ('game',)
+
+
 class GameEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game_Event
         exclude = ('game',)
 
+
 class LeagueSerializer(serializers.ModelSerializer):
     class Meta:
-        model=LeagueRow
-        fields='__all__'
+        model = LeagueRow
+        fields = '__all__'
+
 
 class NewSerializer(serializers.ModelSerializer):
     class Meta:
-        model=New
-        fields='__all__'
+        model = New
+        fields = '__all__'
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Comment
-        fields='__all__'
+        model = Comment
+        fields = '__all__'

@@ -9,6 +9,9 @@ pip install coverage
 pip install Pillow # library for django ImageField
 pip install django-cors-headers
 pip install faker # fake data for testing
+pip install django-rest-auth
+pip install django-allauth
+pip install django-model-utils
 
 ```
 for seeing coverage of test run following commands:

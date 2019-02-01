@@ -154,11 +154,6 @@ def game_news(request):
         return Response(serializer.data)
 
 
-class LeaguesListView(generics.ListAPIView):
-    queryset = League.objects.all()
-    serializer_class = LeagueSerializer
-
-
 @api_view(['GET', 'POST'])
 def player_season_detail(request, pid):
     print(type(pid))
@@ -288,9 +283,20 @@ def game_eventLine(request):
         return Response(serializer.data)
 
 
+class LeaguesListView(generics.ListAPIView):
+    queryset = League.objects.all()
+    serializer_class = LeagueListSerializer
+
+
 class LeagueDetailView(generics.ListAPIView):
     queryset = LeagueRow.objects.all()
     serializer_class = LeagueSerializer
 
     def get_queryset(self):
-        return LeagueRow.objects.filter(league_id=self.request.pk).all()
+        return LeagueRow.objects.filter(league_id=self.kwargs['pk']).all()
+
+
+@api_view(['GET', 'POST'])
+def test(request):
+    print("something")
+    return Response(request.GET)
