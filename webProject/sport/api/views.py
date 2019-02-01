@@ -5,6 +5,7 @@ from django.db.models import Q, F
 from rest_framework.decorators import api_view
 from rest_framework import status, mixins, generics, permissions
 from rest_framework.response import Response
+from datetime import datetime, timedelta
 
 from .serializers import *
 from rest_framework import generics
@@ -134,10 +135,10 @@ def add_favorite_game(request):
 @api_view(['GET', 'POST'])
 def is_login(request):
     key = request.query_params.get('key')
-
+    print()
     if request.method == 'GET':
-        print(key)
-        return Response(False)
+        print(request.user)
+        return Response(request.user.is_authenticated)
 
 
 @api_view(['GET', 'POST'])
@@ -244,12 +245,18 @@ def last_news(request):
 
 @api_view(['GET', 'POST'])
 def favorite_news(request):
-    user = request.query_params.get('user')
+    # user = request.query_params.get('user')
     if request.method == 'GET':
-        query = User.objects.get(user=user)
-        favoriteNews = query.favoriteNews
-        serializer = NewSerializer(favoriteNews, many=True)
-        return Response(serializer.data)
+        user = request.user
+        if user.is_authenticated:
+            # query = User.objects.get(user=user)
+            down_side = datetime.now() - timedelta(days=1)
+            up_side = datetime.now() + timedelta(days=1)
+            favoriteNews = New.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
+            serializer = NewSerializer(favoriteNews, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({})
 
 
 @api_view(['GET', 'POST'])
@@ -262,12 +269,18 @@ def games(request):
 
 @api_view(['GET', 'POST'])
 def favorite_games(request):
-    user = request.query_params.get('user')
+    # user = request.query_params.get('user')
     if request.method == 'GET':
-        query = User.objects.get(user=user)
-        favoriteGames = query.favoriteGames
-        serializer = GameResultSerializer(favoriteGames, many=True)
-        return Response(serializer.data)
+        user = request.user
+        if user.is_authenticated:
+            down_side = datetime.now() - timedelta(days=1)
+            up_side = datetime.now() + timedelta(days=1)
+            favoriteGames = Game.objects.filter(releaseTime__gt=down_side, siteuser=user, releaseTime__lt=up_side)
+            # favoriteGames =user.favoriteGames
+            serializer = GameResultSerializer(favoriteGames, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({})
 
 
 @api_view(['GET', 'POST'])
