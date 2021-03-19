@@ -13,7 +13,7 @@ django-model-utils==3.1.2
 django-registration==3.0
 django-related-admin==0.7.0
 django-rest-auth==0.9.3
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 Faker==1.0.2
 idna==2.8
 ipython==7.2.0
